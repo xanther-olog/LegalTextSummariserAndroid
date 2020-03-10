@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.lts_android.entity.FlaskApiResponseBody;
 import com.example.lts_android.entity.SourceFileRequestBody;
 import com.example.lts_android.retrofit.RetrofitApis;
 import com.example.lts_android.retrofit.RetrofitInstanceGetter;
@@ -26,6 +27,7 @@ import com.example.lts_android.retrofit.RetrofitInstanceGetter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.List;
 
 import lombok.SneakyThrows;
 import retrofit2.Call;
@@ -106,25 +108,22 @@ public class MainActivity extends AppCompatActivity {
             String fileContents=stringBuilder.toString();
             //System.out.println(fileContents);
 
+
             RetrofitApis retrofitApis= RetrofitInstanceGetter
                     .getRetrofitInstance("http://192.168.88.104:3000")
                     .create(RetrofitApis.class);
 
             SourceFileRequestBody sourceFileRequestBody=new SourceFileRequestBody();
             sourceFileRequestBody.setSourceFile(fileContents);
-            retrofitApis.sendSourceFileToFlask(sourceFileRequestBody).enqueue(new Callback<String>() {
+            retrofitApis.sendSourceFileToFlask(sourceFileRequestBody).enqueue(new Callback<FlaskApiResponseBody>() {
+
                 @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-                    if(response.errorBody()==null && response.body()!=null){
-                        System.out.println();
-                    }
-                    else{
-                        System.out.println();
-                    }
+                public void onResponse(Call<FlaskApiResponseBody> call, Response<FlaskApiResponseBody> response) {
+                    System.out.println();
                 }
 
                 @Override
-                public void onFailure(Call<String> call, Throwable t) {
+                public void onFailure(Call<FlaskApiResponseBody> call, Throwable t) {
                     Toast.makeText(getApplicationContext(),
                             "Flask api call failed for main file",Toast.LENGTH_SHORT).show();
                 }
