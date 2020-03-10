@@ -1,8 +1,10 @@
 package com.example.lts_android;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,7 +29,6 @@ import com.example.lts_android.retrofit.RetrofitInstanceGetter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.List;
 
 import lombok.SneakyThrows;
 import retrofit2.Call;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button _fileOpener;
 
+    ProgressDialog progressDialog;
 
 
     @Override
@@ -115,11 +117,17 @@ public class MainActivity extends AppCompatActivity {
 
             SourceFileRequestBody sourceFileRequestBody=new SourceFileRequestBody();
             sourceFileRequestBody.setSourceFile(fileContents);
+
+
             retrofitApis.sendSourceFileToFlask(sourceFileRequestBody).enqueue(new Callback<FlaskApiResponseBody>() {
 
                 @Override
                 public void onResponse(Call<FlaskApiResponseBody> call, Response<FlaskApiResponseBody> response) {
-                    System.out.println();
+                    if(response.body()!=null && response.errorBody()==null){
+                        System.out.println();
+                        startActivity(new Intent(MainActivity.this,ResultPage.class)
+                                .putExtra("data",response.body()));
+                    }
                 }
 
                 @Override
@@ -127,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),
                             "Flask api call failed for main file",Toast.LENGTH_SHORT).show();
                 }
+
             });
 
         }
@@ -165,4 +174,6 @@ public class MainActivity extends AppCompatActivity {
             break;
         }
     }
+
+
 }

@@ -1,9 +1,11 @@
 package com.example.lts_android.entity;
 
-import com.google.gson.internal.LinkedTreeMap;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,8 +15,12 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class FlaskApiResponseBody {
+public class FlaskApiResponseBody implements Serializable{
+
+
     List<String> sortedSentenceList=new ArrayList<>();
+
     List<String> paras_list=new ArrayList<>();
-    LinkedTreeMap<String,Integer> tncs_dt=new LinkedTreeMap<>();
+
+    Map<String,Integer> tncs_dt=new HashMap<>();
 }
