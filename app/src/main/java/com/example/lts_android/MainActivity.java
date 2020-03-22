@@ -1,10 +1,8 @@
 package com.example.lts_android;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -38,9 +36,6 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     Button _fileOpener;
-
-    ProgressDialog progressDialog;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             RetrofitApis retrofitApis= RetrofitInstanceGetter
-                    .getRetrofitInstance("http://192.168.88.104:3000")
+                    .getRetrofitInstance("http://192.168.43.11:3000")
                     .create(RetrofitApis.class);
 
             SourceFileRequestBody sourceFileRequestBody=new SourceFileRequestBody();
@@ -124,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<FlaskApiResponseBody> call, Response<FlaskApiResponseBody> response) {
                     if(response.body()!=null && response.errorBody()==null){
-                        System.out.println();
                         startActivity(new Intent(MainActivity.this,ResultPage.class)
                                 .putExtra("data",response.body()));
                     }
