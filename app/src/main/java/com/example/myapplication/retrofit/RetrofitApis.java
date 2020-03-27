@@ -1,9 +1,7 @@
-package com.example.lts_android.retrofit;
+package com.example.myapplication.retrofit;
 
-import com.example.lts_android.entity.FlaskApiResponseBody;
-import com.example.lts_android.entity.SourceFileRequestBody;
-
-import java.util.List;
+import com.example.myapplication.entity.FlaskApiResponseBody;
+import com.example.myapplication.entity.SourceFileRequestBody;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

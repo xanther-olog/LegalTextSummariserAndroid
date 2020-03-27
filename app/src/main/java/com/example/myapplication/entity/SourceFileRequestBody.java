@@ -1,4 +1,4 @@
-package com.example.lts_android.entity;
+package com.example.myapplication.entity;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,12 +1,12 @@
-package com.example.lts_android;
-
+package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.lts_android.entity.FlaskApiResponseBody;
+import com.example.myapplication.entity.FlaskApiResponseBody;
 
 import java.io.Serializable;
 import java.util.List;
@@ -21,6 +21,8 @@ public class ResultPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result_page);
 
+        Log.d("", "onCreate: ");
+
         FlaskApiResponseBody flaskApiResponseBody= (FlaskApiResponseBody) getIntent().getSerializableExtra("data");
         if(null!=flaskApiResponseBody){
             List<String> paras_list = flaskApiResponseBody.getParas_list();
@@ -33,6 +35,5 @@ public class ResultPage extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),
                     "Null object! Phone fek de!",Toast.LENGTH_SHORT).show();
         }
-
     }
 }

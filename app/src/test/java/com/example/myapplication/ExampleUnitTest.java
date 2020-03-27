@@ -1,4 +1,4 @@
-package com.example.lts_android;
+package com.example.myapplication;
 
 import org.junit.Test;
 

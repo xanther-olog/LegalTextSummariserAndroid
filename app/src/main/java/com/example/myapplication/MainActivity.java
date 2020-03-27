@@ -1,32 +1,42 @@
-package com.example.lts_android;
+package com.example.myapplication;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+
+import com.example.myapplication.entity.FlaskApiResponseBody;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.SortedList;
 
-import com.example.lts_android.entity.FlaskApiResponseBody;
-import com.example.lts_android.entity.SourceFileRequestBody;
-import com.example.lts_android.retrofit.RetrofitApis;
-import com.example.lts_android.retrofit.RetrofitInstanceGetter;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.util.Log;
+import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+
+import com.example.myapplication.entity.SourceFileRequestBody;
+import com.example.myapplication.retrofit.RetrofitApis;
+import com.example.myapplication.retrofit.RetrofitInstanceGetter;
 
 import lombok.SneakyThrows;
 import retrofit2.Call;
@@ -41,6 +51,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
+                Intent i=new Intent(MainActivity.this,ResultPage.class);
+                startActivity(i);
+            }
+        });
+
+        /*Button load_btn=findViewById(R.id.imp_btn);
+        load_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFile();
+            }
+        });*/
 
         _fileOpener=findViewById(R.id.fileOpener);
 
@@ -54,11 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
-
     }
-
 
     @SneakyThrows
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -74,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             String type=splitArray[0];
             String id=splitArray[1];
             if(type.equals("primary")){
-                filepath=Environment.getExternalStorageDirectory()+"/"+id;
+                filepath= Environment.getExternalStorageDirectory()+"/"+id;
 
             }else{
                 Toast toast = Toast.makeText(getApplicationContext(),
@@ -105,15 +132,12 @@ public class MainActivity extends AppCompatActivity {
             String fileContents=stringBuilder.toString();
             //System.out.println(fileContents);
 
-
             RetrofitApis retrofitApis= RetrofitInstanceGetter
-                    .getRetrofitInstance("http://192.168.43.11:3000")
+                    .getRetrofitInstance("http://192.168.43.169:3000")
                     .create(RetrofitApis.class);
 
             SourceFileRequestBody sourceFileRequestBody=new SourceFileRequestBody();
             sourceFileRequestBody.setSourceFile(fileContents);
-
-
             retrofitApis.sendSourceFileToFlask(sourceFileRequestBody).enqueue(new Callback<FlaskApiResponseBody>() {
 
                 @Override
@@ -160,14 +184,57 @@ public class MainActivity extends AppCompatActivity {
 
         switch (requestCode) {
             case 100:
-                if (grantResults.length > 0 && grantResults[0]==PackageManager.PERMISSION_GRANTED) {
-                Log.i("value", "Permission Granted, Now you can use local drive .");
-            } else {
-                Log.e("value", "Permission Denied, You cannot use local drive .");
-            }
-            break;
+                if (grantResults.length > 0 && grantResults[0]== PackageManager.PERMISSION_GRANTED) {
+                    Log.i("value", "Permission Granted, Now you can use local drive .");
+                } else {
+                    Log.e("value", "Permission Denied, You cannot use local drive .");
+                }
+                break;
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    /*private void openFile() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/txt");
+        startActivityForResult(Intent.createChooser(intent, "Choose a file"),
+                1);
+    }*/
+
+    /*@Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent resultData) {
+        if (requestCode == 1
+                && resultCode == Activity.RESULT_OK) {
+            // The result data contains a URI for the document or directory that
+            // the user selected.
+            Uri uri = null;
+            if (resultData != null) {
+                uri = resultData.getData();
+                // Perform operations on the document using its URI.
+            }
+        }
+    }*/
 }
