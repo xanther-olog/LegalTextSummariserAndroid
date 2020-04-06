@@ -23,4 +23,6 @@ public class FlaskApiResponseBody implements Serializable{
     List<String> paras_list=new ArrayList<>();
 
     Map<String,Integer> tncs_dt=new HashMap<>();
+
+    Map<String ,Integer> rankedDictionary = new HashMap<>();
 }

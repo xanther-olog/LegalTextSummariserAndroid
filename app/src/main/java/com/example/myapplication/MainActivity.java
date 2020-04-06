@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -27,7 +28,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -46,6 +53,12 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     Button _fileOpener;
+    SeekBar seekBar;
+    TextView percent_seeked;
+
+    int reduction_percent_selected;
+
+    Bundle b1=new Bundle();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,13 +78,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*Button load_btn=findViewById(R.id.imp_btn);
-        load_btn.setOnClickListener(new View.OnClickListener() {
+        seekBar=findViewById(R.id.seekBar);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onClick(View v) {
-                openFile();
+            public void onProgressChanged(SeekBar seekBar, int progress,
+                                          boolean fromUser) {
+                //Toast.makeText(getApplicationContext(),"seekbar progress: "+progress, Toast.LENGTH_SHORT).show();
+                percent_seeked=findViewById(R.id.percent_seeked);
+                percent_seeked.setText(Integer.toString(progress)+"%");
+                reduction_percent_selected=progress;
             }
-        });*/
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                //Toast.makeText(getApplicationContext(),"seekbar touch started!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                //Toast.makeText(getApplicationContext(),"seekbar touch stopped!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         _fileOpener=findViewById(R.id.fileOpener);
 
@@ -81,7 +108,20 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("text/plain");
+
+                final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this,R.style.Theme_AppCompat_DayNight_Dialog);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Opening explorer...");
+                progressDialog.show();
+
                 startActivityForResult(intent,2);
+
+                new android.os.Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                    }
+                },2000);
 
             }
         });
@@ -143,8 +183,21 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<FlaskApiResponseBody> call, Response<FlaskApiResponseBody> response) {
                     if(response.body()!=null && response.errorBody()==null){
+                        final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this,R.style.Theme_AppCompat_DayNight_Dialog);
+                        progressDialog.setIndeterminate(true);
+                        progressDialog.setMessage("Generating Summary...");
+                        progressDialog.show();
                         startActivity(new Intent(MainActivity.this,ResultPage.class)
-                                .putExtra("data",response.body()));
+                                .putExtra("data",response.body())
+                                .putExtra("pr",reduction_percent_selected));
+
+                        new android.os.Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressDialog.dismiss();
+                            }
+                        },2500);
+
                     }
                 }
 
@@ -153,12 +206,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),
                             "Flask api call failed for main file",Toast.LENGTH_SHORT).show();
                 }
-
             });
-
         }
-
-
     }
 
     private boolean checkPermission() {
@@ -214,27 +263,4 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-    /*private void openFile() {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("application/txt");
-        startActivityForResult(Intent.createChooser(intent, "Choose a file"),
-                1);
-    }*/
-
-    /*@Override
-    public void onActivityResult(int requestCode, int resultCode,
-                                 Intent resultData) {
-        if (requestCode == 1
-                && resultCode == Activity.RESULT_OK) {
-            // The result data contains a URI for the document or directory that
-            // the user selected.
-            Uri uri = null;
-            if (resultData != null) {
-                uri = resultData.getData();
-                // Perform operations on the document using its URI.
-            }
-        }
-    }*/
 }

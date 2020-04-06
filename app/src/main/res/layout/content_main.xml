@@ -8,24 +8,94 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
+    <ProgressBar
+        android:id="@+id/progress1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/fileOpener"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/import_file"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.346" />
+        android:indeterminate="true"
+        android:visibility="invisible"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:justificationMode="inter_word"
+            android:lineSpacingExtra="5dp"
+            android:padding="15dp"
+            android:text="Drag and adjust the seekbar to select the percentage of reduction desired :" />
+
+        <TextView
+            android:id="@+id/percent_seeked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0%"
+            android:textSize="15dp"
+            app:layout_constraintVertical_bias="0.300"></TextView>
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:text="0%"
+                android:textSize="15dp" />
+
+            <SeekBar
+                android:id="@+id/seekBar"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="200dp"
+                android:layout_height="20dp"
+                android:max="100"
+                android:progress="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:text=" 100%"
+                android:textSize="15dp" />
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:justificationMode="inter_word"
+            android:lineSpacingExtra="5dp"
+            android:padding="15dp"
+            android:text="Import your Terms and Conditions file using import button!"
+            />
+
+        <Button
+            android:id="@+id/fileOpener"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/import_file"
+            android:tooltipText="Open file explorer!"/>
+
+        <Button
+            android:id="@+id/flaskCall_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Generate Summary"
+            android:tooltipText="Open file explorer!"/>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

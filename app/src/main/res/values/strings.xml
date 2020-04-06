@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">SummarizeIt</string>
     <string name="action_settings">Settings</string>
     <string name="import_file">Import File</string>
     <string name="result_here">Result Here</string>
